@@ -1,0 +1,12 @@
+<ion-view title="LeaderBoards" hide-nav-bar="true" id="page4" style="background-color:#365EFF;">
+    <ion-content padding="true" style="background: url(img/pP1d6YVsSjmVXxf3X6ce_maxresdefault.jpg) no-repeat center;background-size:cover;" class="manual-ios-statusbar-padding">
+        <h1 id="leaderBoards-heading1" style="color:#FFFFFF;text-align:center;">Leaderboards</h1>
+        <div><ion-spinner icon="lines" class="spinner-energized" ng-show="ListaUsuarios.length == 0"></ion-spinner></div>
+        <ion-list id="leaderBoards-list3" ng-show="ListaUsuarios.length != 0">
+            <ion-item class="balanced" ng-repeat="user in ListaUsuarios | orderBy : '-puntaje'" id="leaderBoards-list-item2">
+            	{{user.usuario}}
+                <span class="item-note">{{user.puntaje}}</span>
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</ion-view>

@@ -1,0 +1,15 @@
+<ion-view title="Trivia" hide-nav-bar="true" id="page6">
+    <ion-content padding="true" ng-init="init()" style="background: url(img/ClNst5sORIGI86l3QgcD_maxresdefault.jpg) no-repeat center;background-size:cover;" class="manual-ios-statusbar-padding">
+        <div class="spacer" style="width: 300px; height: 7px;"></div>
+        <div><ion-spinner icon="lines" class="spinner-energized" ng-show="!IdxActual"></ion-spinner></div>
+        <h1 id="trivia-heading5" ng-show="IdxActual" style="color:#FFFFFF;text-align:center;">Pregunta {{IdxActual}} de {{TotalPregs}}</h1>
+        <div class="spacer" ng-show="IdxActual" style="width: 300px; height: 12px;"></div>
+        <div id="trivia-markdown5" ng-show="IdxActual" style="color:#FFFFFF;font-size:18px;text-align:center;">
+            <p>{{TextoPregunta}}</p>
+        </div>
+        <div class="spacer" ng-show="IdxActual" style="width: 300px; height: 38px;"></div>
+        <button id="trivia-button8" ng-show="IdxActual" ng-click="Answer('A')" class="button {{OpcAStyle}}  button-block">{{OpcionA}}</button>
+        <button id="trivia-button11" ng-show="IdxActual" ng-click="Answer('B')" class="button {{OpcBStyle}}  button-block">{{OpcionB}}</button>
+        <button id="trivia-button12" ng-show="IdxActual" ng-click="Answer('C')" class="button {{OpcCStyle}}  button-block">{{OpcionC}}</button>
+    </ion-content>
+</ion-view>

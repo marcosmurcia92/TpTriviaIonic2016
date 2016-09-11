@@ -1,0 +1,14 @@
+<ion-view title="Login" id="page5" style="background-color:#365EFF;">
+    <ion-content padding="true" style="background: url(img/LOX1N2TSACmn6ar4JUd5_maxresdefault.jpg) no-repeat center;background-size:cover;" class="has-header">
+        <form id="login-form1" name="FormLogin" class="list">
+            <ion-list id="login-list1">
+                <label class="item item-input" id="login-input1" name="userName">
+                    <span class="input-label">Usuario</span>
+                    <input style="color:#fff" type="text" name="loginInput" ng-model="userInputName" placeholder="" required>
+                </label>
+            </ion-list>
+            <div class="spacer" style="height: 40px;"></div>
+            <button  ng-disabled="(userInputName == null || userInputName == '')" id="login-button1" ng-click="Login(userInputName)" style="font-weight:600;border-radius:10px 10px 10px 10px;" class="button button-balanced  button-block icon-left ion-android-checkbox-outline">Log in {{userInputName}}</button>
+        </form>
+    </ion-content>
+</ion-view>

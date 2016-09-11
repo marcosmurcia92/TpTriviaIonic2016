@@ -1,0 +1,16 @@
+<ion-view title="Results" hide-nav-bar="true" id="page7">
+    <ion-content padding="true" style="background: url(img/vCEEThRhScuhagRg6WoL_maxresdefault.jpg) no-repeat center;background-size:cover;" class="manual-ios-statusbar-padding">
+        <div class="spacer" style="width: 300px; height: 10px;"></div>
+        <h1 id="results-heading6" style="color:#FFFFFF;text-align:center;">Resultados</h1>
+        <div class="spacer" style="width: 300px; height: 31px;"></div>
+        <div><ion-spinner icon="lines" class="spinner-energized" ng-show="!puntajeTotal"></ion-spinner></div>
+        <div id="results-markdown6" ng-show="puntajeTotal" style="color:#FFFFFF;font-size:25px;text-align:center;">
+            <p><strong>Puntaje:</strong>{{puntajeTotal}}</p>
+        </div>
+        <div>
+            <img src="img/lU8s6hBnRomnMIxfqerg_quiz.png" width="75%" height="auto" style="display: block; margin-left: auto; margin-right: auto;">
+        </div>
+        <div class="spacer" style="width: 300px; height: 32px;"></div>
+        <a ui-sref="mainTabs.game" ng-disabled="!puntajeTotal" id="results-button9" style="font-weight:500;color:#000000;font-size:25px;border-radius:25px 25px 25px 25px;" class="button button-energized  button-block">Volver al Inicio</a>
+    </ion-content>
+</ion-view>

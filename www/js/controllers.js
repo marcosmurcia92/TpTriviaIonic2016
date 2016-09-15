@@ -1,9 +1,9 @@
 angular.module('app.controllers', [])
   
-.controller('authorCtrl', ['$scope', '$stateParams','$cordovaInAppBrowserProvider' // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+.controller('authorCtrl', ['$scope', '$stateParams','$cordovaInAppBrowser', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $stateParams,$cordovaInAppBrowserProvider) {
+function ($scope, $stateParams,$cordovaInAppBrowser) {
 
 	var options = {
       location: 'yes',
@@ -12,24 +12,24 @@ function ($scope, $stateParams,$cordovaInAppBrowserProvider) {
     };
 
 	$scope.OpenGitHub=function(){
-		$cordovaInAppBrowserProvider.open('https://github.com/marcosmurcia92/', '_self', options)
+		$cordovaInAppBrowser.open('https://github.com/marcosmurcia92/', '_self', options)
       .then(function(event) {
         // success
       })
       .catch(function(event) {
         // error
       });
-	}
+	};
 
 	$scope.OpenMail=function(){
 		
-	}
+	};
 }])
    
-.controller('gameCtrl', ['$scope', '$state', '$stateParams','$ionicHistory' , '$timeout','UsuarioTrivia', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+.controller('gameCtrl', ['$scope', '$state', '$stateParams','$ionicHistory', '$timeout','$cordovaVibration','$cordovaNativeAudio' ,'UsuarioTrivia', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $state, $stateParams,$ionicHistory, $timeout,UsuarioTrivia) {
+function ($scope, $state, $stateParams,$ionicHistory, $timeout,$cordovaVibration,$cordovaNativeAudio,UsuarioTrivia) {
 $scope.PreguntasTrivia = [];
 	
 	$scope.init= function(){
@@ -44,11 +44,19 @@ $scope.PreguntasTrivia = [];
 		  console.log($scope.PreguntasTrivia.length);
 		    });
 		  });
-	}
+	};
 
   $scope.Jugar = function(){
+  $cordovaVibration.vibrate(500);
+  $cordovaNativeAudio.play('menu');
   	UsuarioTrivia.startGame($scope.PreguntasTrivia.length);
   	$state.go('mainTabs.trivia',{pregId: $scope.PreguntasTrivia[0].id});
+  };
+
+  $scope.Jugar = function(){
+  $cordovaVibration.vibrate(500);
+  $cordovaNativeAudio.play('menu');
+  	$state.go('login');
   };
 
 }])
@@ -70,12 +78,14 @@ function ($scope, $stateParams,$timeout) {
 
 }])
       
-.controller('loginCtrl', ['$scope', '$state', '$stateParams','$ionicHistory','UsuarioTrivia', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+.controller('loginCtrl', ['$scope', '$state', '$stateParams','$ionicHistory','$cordovaVibration','$cordovaNativeAudio','UsuarioTrivia', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $state, $stateParams,$ionicHistory,UsuarioTrivia) {
+function ($scope, $state, $stateParams,$ionicHistory,$cordovaVibration,$cordovaNativeAudio,UsuarioTrivia) {
 
   $scope.Login = function(name){
+      $cordovaVibration.vibrate(500);
+      $cordovaNativeAudio.play('menu');
   	console.log(name);
         $ionicHistory.clearHistory();
   	UsuarioTrivia.login(name);
@@ -83,10 +93,10 @@ function ($scope, $state, $stateParams,$ionicHistory,UsuarioTrivia) {
   };
 }])
    
-.controller('triviaCtrl', ['$scope','$state', '$stateParams','$ionicHistory', '$timeout','UsuarioTrivia',// The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+.controller('triviaCtrl', ['$scope','$state', '$stateParams','$ionicHistory','$cordovaVibration','$cordovaNativeAudio', '$timeout','UsuarioTrivia',// The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope,$state, $stateParams,$ionicHistory, $timeout,UsuarioTrivia) {
+function ($scope,$state, $stateParams,$ionicHistory,$cordovaVibration,$cordovaNativeAudio, $timeout,UsuarioTrivia) {
 	$scope.PreguntasTrivia = [];
 	$scope.IdxActual;
 	$scope.TotalPregs;
@@ -131,7 +141,9 @@ function ($scope,$state, $stateParams,$ionicHistory, $timeout,UsuarioTrivia) {
   		if($scope.CanInteract){
   			$scope.CanInteract = false;
 	  		if ($answer == $scope.OpcCorrecta) {
-	  			UsuarioTrivia.setResult($answer,$scope.IdxActual,true);
+		      $cordovaVibration.vibrate(800);
+		      $cordovaNativeAudio.play('ok');
+	  			UsuarioTrivia.setResult($answer,$scope.IdxActual,true,$scope.PreguntasTrivia[$scope.IdxActual-1]);
 	  			if($answer == 'A'){
 	  				$scope.OpcAStyle = 'button-balanced';
 	  			}else if($answer == 'B'){
@@ -140,7 +152,9 @@ function ($scope,$state, $stateParams,$ionicHistory, $timeout,UsuarioTrivia) {
 	  				$scope.OpcCStyle = 'button-balanced';
 	  			}
 	  		}else{
-	  			UsuarioTrivia.setResult($answer,$scope.IdxActual,false);
+		      $cordovaVibration.vibrate(800);
+		      $cordovaNativeAudio.play('wrong');
+	  			UsuarioTrivia.setResult($answer,$scope.IdxActual,false,$scope.PreguntasTrivia[$scope.IdxActual-1]);
 	  			if($answer == 'A'){
 	  				$scope.OpcAStyle = 'button-assertive';
 	  			}else if($answer == 'B'){
@@ -177,10 +191,10 @@ function ($scope,$state, $stateParams,$ionicHistory, $timeout,UsuarioTrivia) {
 
 }])
    
-.controller('resultsCtrl', ['$scope', '$stateParams','$ionicHistory', 'UsuarioTrivia',  // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+.controller('resultsCtrl', ['$scope', '$stateParams','$ionicHistory','$cordovaVibration','$cordovaNativeAudio', 'UsuarioTrivia',  // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $stateParams,$ionicHistory, UsuarioTrivia) {
+function ($scope, $stateParams,$ionicHistory,$cordovaVibration,$cordovaNativeAudio, UsuarioTrivia) {
 
     $ionicHistory.clearHistory();
 	var VariableFireBase = new Firebase('https://tp-trivia-pps.firebaseio.com/Usuarios/');
@@ -189,6 +203,7 @@ function ($scope, $stateParams,$ionicHistory, UsuarioTrivia) {
     var score = UsuarioTrivia.getScore();
     $scope.puntajeTotal = score;
     console.log(name);
+	  $cordovaNativeAudio.play('end');
     VariableFireBase.push({usuario:name, puntaje:score, resultados:results},function(error){
     	if(error){
     		console.info("ERROR:",error);
@@ -196,5 +211,11 @@ function ($scope, $stateParams,$ionicHistory, UsuarioTrivia) {
     		console.log("EXITOSO");
     	}
     });
+
+    $scope.VolverAlMenu=function(){
+      $cordovaVibration.vibrate(500);
+      $cordovaNativeAudio.play('menu');
+      $state.go('mainTabs.trivia');
+    };
 }])
  

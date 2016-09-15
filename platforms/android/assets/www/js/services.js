@@ -17,8 +17,12 @@ angular.module('app.services', [])
 			triviaResults = [length];
 			score = 0;
 		},
-		setResult:function(answer,idx,correct){
-			triviaResults[idx] = answer;
+		setResult:function(answer,idx,correct,preg){
+			triviaResults[idx] = {
+				elegida:answer,
+				correcta:(correct?"SI":"NO"),
+				pregunta:preg
+			};
 			if(correct == true){
 				score += 100;
 			}

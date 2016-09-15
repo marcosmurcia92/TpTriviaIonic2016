@@ -5,12 +5,42 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.directives','app.services',])
+angular.module('app', ['ionic','ngCordova' ,'app.controllers', 'app.routes', 'app.directives','app.services',])
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform,$cordovaNativeAudio) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
+
+      $cordovaNativeAudio
+        .preloadSimple('end', 'src/End.mp3')
+        .then(function (msg) {
+          console.log(msg);
+        }, function (error) {
+          alert(error);
+        });
+      $cordovaNativeAudio
+        .preloadSimple('menu', 'src/Menu.mp3')
+        .then(function (msg) {
+          console.log(msg);
+        }, function (error) {
+          alert(error);
+        });
+      $cordovaNativeAudio
+        .preloadSimple('ok', 'src/Ok.mp3')
+        .then(function (msg) {
+          console.log(msg);
+        }, function (error) {
+          alert(error);
+        });
+      $cordovaNativeAudio
+        .preloadSimple('wrong', 'src/Wrong.mp3')
+        .then(function (msg) {
+          console.log(msg);
+        }, function (error) {
+          alert(error);
+        });
+
     if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
       cordova.plugins.Keyboard.disableScroll(true);

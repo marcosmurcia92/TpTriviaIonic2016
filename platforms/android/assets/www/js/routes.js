@@ -12,6 +12,7 @@ angular.module('app.routes', [])
 
       .state('mainTabs.author', {
     url: '/Tabs/Author',
+    cache: false,
     views: {
       'tab1': {
         templateUrl: 'templates/author.html',

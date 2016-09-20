@@ -47,14 +47,14 @@ $scope.PreguntasTrivia = [];
 	};
 
   $scope.Jugar = function(){
-  $cordovaVibration.vibrate(500);
+  $cordovaVibration.vibrate(200);
   $cordovaNativeAudio.play('menu');
   	UsuarioTrivia.startGame($scope.PreguntasTrivia.length);
   	$state.go('mainTabs.trivia',{pregId: $scope.PreguntasTrivia[0].id});
   };
 
-  $scope.Jugar = function(){
-  $cordovaVibration.vibrate(500);
+  $scope.LogOut = function(){
+  $cordovaVibration.vibrate(200);
   $cordovaNativeAudio.play('menu');
   	$state.go('login');
   };
@@ -84,7 +84,7 @@ function ($scope, $stateParams,$timeout) {
 function ($scope, $state, $stateParams,$ionicHistory,$cordovaVibration,$cordovaNativeAudio,UsuarioTrivia) {
 
   $scope.Login = function(name){
-      $cordovaVibration.vibrate(500);
+      $cordovaVibration.vibrate(200);
       $cordovaNativeAudio.play('menu');
   	console.log(name);
         $ionicHistory.clearHistory();
@@ -141,7 +141,7 @@ function ($scope,$state, $stateParams,$ionicHistory,$cordovaVibration,$cordovaNa
   		if($scope.CanInteract){
   			$scope.CanInteract = false;
 	  		if ($answer == $scope.OpcCorrecta) {
-		      $cordovaVibration.vibrate(800);
+		      $cordovaVibration.vibrate(300);
 		      $cordovaNativeAudio.play('ok');
 	  			UsuarioTrivia.setResult($answer,$scope.IdxActual,true,$scope.PreguntasTrivia[$scope.IdxActual-1]);
 	  			if($answer == 'A'){
@@ -152,7 +152,7 @@ function ($scope,$state, $stateParams,$ionicHistory,$cordovaVibration,$cordovaNa
 	  				$scope.OpcCStyle = 'button-balanced';
 	  			}
 	  		}else{
-		      $cordovaVibration.vibrate(800);
+		      $cordovaVibration.vibrate(300);
 		      $cordovaNativeAudio.play('wrong');
 	  			UsuarioTrivia.setResult($answer,$scope.IdxActual,false,$scope.PreguntasTrivia[$scope.IdxActual-1]);
 	  			if($answer == 'A'){
@@ -191,10 +191,10 @@ function ($scope,$state, $stateParams,$ionicHistory,$cordovaVibration,$cordovaNa
 
 }])
    
-.controller('resultsCtrl', ['$scope', '$stateParams','$ionicHistory','$cordovaVibration','$cordovaNativeAudio', 'UsuarioTrivia',  // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+.controller('resultsCtrl', ['$scope', '$state','$stateParams','$ionicHistory','$ionicPopup','$cordovaFile','$cordovaVibration','$cordovaNativeAudio', 'UsuarioTrivia',  // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $stateParams,$ionicHistory,$cordovaVibration,$cordovaNativeAudio, UsuarioTrivia) {
+function ($scope, $state ,$stateParams,$ionicHistory,$ionicPopup,$cordovaFile,$cordovaVibration,$cordovaNativeAudio, UsuarioTrivia) {
 
     $ionicHistory.clearHistory();
 	var VariableFireBase = new Firebase('https://tp-trivia-pps.firebaseio.com/Usuarios/');
@@ -203,19 +203,132 @@ function ($scope, $stateParams,$ionicHistory,$cordovaVibration,$cordovaNativeAud
     var score = UsuarioTrivia.getScore();
     $scope.puntajeTotal = score;
     console.log(name);
+
 	  $cordovaNativeAudio.play('end');
-    VariableFireBase.push({usuario:name, puntaje:score, resultados:results},function(error){
+
+   var jsonUsuario = {
+  	usuario:name, 
+  	puntaje:score, 
+  	resultados:results
+  };
+
+	VariableFireBase.push(jsonUsuario,function(error){
     	if(error){
     		console.info("ERROR:",error);
     	}else{
     		console.log("EXITOSO");
     	}
-    });
+	});
+
+	$cordovaFile.checkDir(cordova.file.externalApplicationStorageDirectory, "files/Registro")
+          .then(function (success) {
+
+            console.info("SUCCESS CHECK",success);
+
+            $cordovaFile.checkFile(cordova.file.externalApplicationStorageDirectory, "files/Registro/FirebaseRes.txt")
+		      .then(function (success) {
+		        console.info("SUCCESS CHECK FILE",success);
+
+			    $cordovaFile.writeExistingFile(cordova.file.externalApplicationStorageDirectory, "files/Registro/FirebaseRes.txt", "_"+JSON.stringify(jsonUsuario))
+	              .then(function (success) {
+
+	                console.info("SUCCESS EXISTING WRITE",success);
+
+	                $cordovaFile.readAsText(cordova.file.externalApplicationStorageDirectory, "files/Registro/FirebaseRes.txt")
+	                  .then(function (success) {
+	                      console.info("SUCCESS READ FILE",success);
+	                     var alertPopup = $ionicPopup.alert({
+	                       title: 'Objeto JSON Guardado!',
+	                       template: success
+	                     });
+	                  }, function (error) {
+	                      console.info("ERROR READ FILE",error);
+	                      var alertPopup = $ionicPopup.alert({
+	                       title: 'Error al Guardar JSON',
+	                       template: error
+	                     });
+	                  });
+	              }, function (error) {
+
+	                console.info("ERROR EXISTING WRITE",error);
+
+	             });
+		      }, function (error) {
+
+		        console.info("ERROR CHECK FILE",error);
+
+		        $cordovaFile.writeFile(cordova.file.externalApplicationStorageDirectory, "files/Registro/FirebaseRes.txt", JSON.stringify(jsonUsuario), true)
+	              .then(function (success) {
+
+	                console.info("SUCCESS WRITE",success);
+	                $cordovaFile.readAsText(cordova.file.externalApplicationStorageDirectory, "files/Registro/FirebaseRes.txt")
+	                  .then(function (success) {
+	                      console.info("SUCCESS READ FILE",success);
+	                     var alertPopup = $ionicPopup.alert({
+	                       title: 'Objeto JSON Guardado!',
+	                       template: success
+	                     });
+	                  }, function (error) {
+	                      console.info("ERROR READ FILE",error);
+	                      var alertPopup = $ionicPopup.alert({
+	                       title: 'Error al Guardar JSON',
+	                       template: error
+	                     });
+	                  });
+	              }, function (error) {
+
+	                console.info("ERROR WRITE",error);
+
+	             });
+		      });
+            
+
+          }, function (error) {
+
+            console.info("ERROR CHECK",error);
+
+            $cordovaFile.createDir(cordova.file.externalApplicationStorageDirectory, "files/Registro", false)
+            .then(function (success) {
+
+              console.info("SUCCESS CREATE",success);
+
+		        $cordovaFile.writeFile(cordova.file.externalApplicationStorageDirectory, "files/Registro/FirebaseRes.txt", JSON.stringify(jsonUsuario), true)
+	              .then(function (success) {
+
+	                console.info("SUCCESS WRITE",success);
+	                $cordovaFile.readAsText(cordova.file.externalApplicationStorageDirectory, "files/Registro/FirebaseRes.txt")
+	                  .then(function (success) {
+	                      console.info("SUCCESS READ FILE",success);
+	                     var alertPopup = $ionicPopup.alert({
+	                       title: 'Objeto JSON Guardado!',
+	                       template: success
+	                     });
+	                  }, function (error) {
+	                      console.info("ERROR READ FILE",error);
+	                      var alertPopup = $ionicPopup.alert({
+	                       title: 'Error al Guardar JSON',
+	                       template: error
+	                     });
+	                  });
+
+	              }, function (error) {
+
+	                console.info("ERROR WRITE",error);
+
+	             });
+
+            }, function (error) {
+
+              console.info("ERROR CREATE",error);
+
+            });
+
+     });
 
     $scope.VolverAlMenu=function(){
-      $cordovaVibration.vibrate(500);
+      $cordovaVibration.vibrate(200);
       $cordovaNativeAudio.play('menu');
-      $state.go('mainTabs.trivia');
+      $state.go('mainTabs.game');
     };
 }])
  

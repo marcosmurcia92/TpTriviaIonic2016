@@ -36,13 +36,13 @@
         },
         "cordova-plugin-nativeaudio": {
             "PACKAGE_NAME": "com.ionicframework.murciaTrivia"
+        },
+        "cordova-plugin-file": {
+            "PACKAGE_NAME": "com.ionicframework.murciaTrivia"
         }
     },
     "dependent_plugins": {
         "cordova-plugin-compat": {
-            "PACKAGE_NAME": "com.ionicframework.murciaTrivia"
-        },
-        "cordova-plugin-file": {
             "PACKAGE_NAME": "com.ionicframework.murciaTrivia"
         }
     }
